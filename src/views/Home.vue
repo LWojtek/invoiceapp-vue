@@ -156,11 +156,11 @@ export default {
   div {
     padding: 4rem;
     border-radius: 2rem;
-    box-shadow: 0 4px 12px 0 rgba(0,0,0, .15);
+    box-shadow: 0 4px 12px 0 rgba(123, 92, 250, 0.35);
   }
 
   h1 {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 2rem;
   }
 
@@ -173,9 +173,9 @@ export default {
 .empty-leave-active {
   transition:all 0.25s ease ;
 }
-.empty-enter-to,
+.empty-enter,
 .empty-leave-to {
-  transform: scale(0);
+  transform: scaleY(0.5) scaleX(0);
   opacity: 0;
 }
 

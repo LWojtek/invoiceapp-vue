@@ -45,6 +45,7 @@ export default {
 
 <style lang="scss" scoped>
 
+
 .modal-enter,
 .modal-leave-to {
   visibility: hidden;

@@ -93,14 +93,16 @@ export default {
     margin-left: 2rem;
     padding: 1rem;
     color: #fff;
-    transition: background-color 250ms;
+    transition: all 250ms;
+    box-shadow: 0 4px 6px 0 rgba(0,0,0, .2);
 
     .text__wrapper {
       margin-left: 1rem;
     }
 
     &:hover {
-      background-color: #9175FF;
+      // background-color: #9175FF;
+      box-shadow: 0 6px 15px 0 rgba(0,0,0, .2);
     }
   }
 }
