@@ -47,6 +47,7 @@ export default new Vuex.Store({
         if (invoice.docId === payload) {
           invoice.invoicePending = true
           invoice.invoicePaid = false
+          invoice.invoiceDraft = false
         }
       })
     },
@@ -67,13 +68,13 @@ export default new Vuex.Store({
             invoiceId: doc.data().invoiceId,
             billerStreetAddress: doc.data().billerStreetAddress,
             billerCity: doc.data().billerCity,
-            billerZipCode: doc.data().billerZipCode,
+            billerPostCode: doc.data().billerPostCode,
             billerCountry: doc.data().billerCountry,
             clientName: doc.data().clientName,
             clientEmail: doc.data().clientEmail,
             clientStreetAddress: doc.data().clientStreetAddress,
             clientCity: doc.data().clientCity,
-            clientZipCode: doc.data().clientZipCode,
+            clientPostCode: doc.data().clientPostCode,
             clientCountry: doc.data().clientCountry,
             invoiceDateUnix: doc.data().invoiceDateUnix,
             invoiceDate: doc.data().invoiceDate,
@@ -104,7 +105,8 @@ export default new Vuex.Store({
       const getInvoice = firebaseApp.firestore().collection('invoices').doc(docId);
       await getInvoice.update({
         invoicePaid: false,
-        invoicePending: true
+        invoicePending: true,
+        invoiceDraft: false
       })
       commit('updateStatusToPending', docId)
     },
@@ -112,6 +114,13 @@ export default new Vuex.Store({
       const getInvoice = firebaseApp.firestore().collection('invoices').doc(docId);
       await getInvoice.delete();
       commit('deleteInvoice', docId)
+    },
+    async updateInvoice({ commit, dispatch }, {docId, routeId}) {
+      commit('deleteInvoice', docId)
+      await dispatch('getInvoices')
+      commit('toggleInvoice')
+      commit('toggleEditInvoice')
+      commit('setCurrentInvoice', routeId)
     }
   },
   modules: {

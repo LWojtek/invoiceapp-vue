@@ -25,7 +25,7 @@
             </div>
             </div>
             <div class="invoice__header--right">
-            <div class="btn btn--edit">
+            <div class="btn btn--edit" @click="toggleEditInvoice">
                 Edit
             </div>
             <div class="btn btn--delete" @click="deleteInvoice(currentInvoice.docId)">
@@ -37,7 +37,7 @@
             <div v-else-if="currentInvoice.invoicePaid" class="btn btn--mark" @click="updateStatusToPending(currentInvoice.docId)">
                 Mark as pending
             </div>
-            <div v-else class="btn btn--mark" :disabled="currentInvoice.invoiceDraft">
+            <div v-else class="btn btn--mark" :class="{disabled : currentInvoice.invoiceDraft}">
                 Mark as paid
             </div>
             </div>
@@ -175,12 +175,12 @@ export default {
 
   data () {
     return {
-        currentInvoice: null,
+      currentInvoice: null,
       invoiceId: this.$route.params.invoiceId
     }
   },
   computed: {
-    ...mapState(['invoiceData', 'currentInvoiceArray'])
+    ...mapState(['invoiceData', 'currentInvoiceArray', 'editInvoice'])
   },
   created () {
     this.getCurrentInvoice()
@@ -199,7 +199,18 @@ export default {
     async deleteInvoice(docId) {
         await this.$store.dispatch('deleteInvoice', docId)
         this.$router.push({ name: 'Home' })
+    },
+    toggleEditInvoice(){
+        this.$store.commit('toggleEditInvoice')
+        this.$store.commit('toggleInvoice')        
     }
+  },
+  watch: {
+      editInvoice(){
+          if (!this.editInvoice) {
+              this.currentInvoice = this.currentInvoiceArray[0];
+          }
+      }
   }
 }
 </script>
@@ -253,7 +264,7 @@ export default {
   padding: 3rem;
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0, .15);
+  box-shadow: 0 2px 4px 0 rgba(0,0,0, .2);
 
   &--left {
     display: flex;
@@ -273,7 +284,12 @@ export default {
     color: #fff;
     letter-spacing: 1px;
     font-weight: 700;
-    transition: 250ms background-color;
+    transition: 250ms all;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0, .2);
+
+    &:hover {
+        box-shadow: 0 6px 12px 0 rgba(0,0,0, .2);
+    }
 
     &--delete {
       background-color: #fd3a17;
@@ -300,6 +316,21 @@ export default {
       }
     }
   }
+}
+
+.btn--mark {   
+
+    &.disabled {
+        background-color: rgba(123, 92, 250, 0.1);
+        color: rgb(107, 107, 107);
+        // pointer-events: none;
+        cursor: not-allowed;
+
+        &:hover {
+            background: rgba(123, 92, 250, 0.1);
+            box-shadow: 0 4px 8px 0 rgba(0,0,0, .2);
+        }
+    }
 }
 
 .status__text {
@@ -372,7 +403,7 @@ export default {
   margin-top: 2rem;
   border-radius: 1rem;
   z-index: 1;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0, .15);
+  box-shadow: 0 2px 4px 0 rgba(0,0,0, .2);
 
   p {
     color: #7e88c4;

@@ -67,10 +67,11 @@ nuxt-link {
   border-radius: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
-  transition: border 200ms;
+  transition: box-shadow 200ms;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0, .2);
 
   &:hover {
-    border: 1px solid #7B5CFA;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0, .2);
   }
 
   &__id {

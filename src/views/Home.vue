@@ -2,14 +2,14 @@
   <div class="container invoices">
     <div class="invoices__content">
       <VInvoicesHeader />
-      <ul class="invoice__container" v-if="invoiceData.length >= 1">
+      <ul class="invoice__container" >
         <VInvoiceListItem 
         v-for="invoice in invoiceData"
         :key="invoice.id"
         :invoice="invoice"
         />
       </ul>
-      <transition name="empty" v-else>
+      <transition name="empty" v-if="invoiceData.length <= 0 && this.invoicesLoaded">
         <div class="empty" >
           <div>
             <h1>There is nothing here</h1>
@@ -36,7 +36,7 @@ export default {
     VInvoiceListItem
   },
   computed: {
-    ...mapState(['invoiceData'])
+    ...mapState(['invoiceData', 'invoicesLoaded'])
   },
   methods: {
     newInvoice(){
@@ -156,7 +156,7 @@ export default {
   div {
     padding: 4rem;
     border-radius: 2rem;
-    box-shadow: 0 4px 12px 0 rgba(123, 92, 250, 0.35);
+    box-shadow: 0 3px 6px 0 rgba(0,0,0, .2);
   }
 
   h1 {

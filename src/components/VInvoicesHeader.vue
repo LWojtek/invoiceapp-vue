@@ -32,6 +32,7 @@ export default {
     flex-basis: 20%;
 
     h1 {
+      font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
@@ -94,7 +95,7 @@ export default {
     padding: 1rem;
     color: #fff;
     transition: all 250ms;
-    box-shadow: 0 4px 6px 0 rgba(0,0,0, .2);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0, .2);
 
     .text__wrapper {
       margin-left: 1rem;

@@ -2,7 +2,8 @@
   <div class="newinvoice">
     <VLoading v-if="this.loading" />
     <VEmptyWarning v-if="this.emptyWarning" />
-    <h2>New Invoice</h2>
+    <h2 v-if="!this.editInvoice">New Invoice</h2>
+    <h2 else>Edit Invoice</h2>
     <form @submit.prevent="submitForm">
       <fieldset>
         <!-- Bill From -->
@@ -233,7 +234,7 @@ export default {
         VEmptyWarning
     },
     computed: {
-      ...mapState(['editInvoice', 'discardModal', 'invoiceModal'])
+      ...mapState(['editInvoice', 'discardModal', 'invoiceModal', 'currentInvoiceArray'])
     },
     data(){
         return {
@@ -339,6 +340,49 @@ export default {
         this.$store.commit('toggleInvoice');
         this.$store.dispatch('getInvoices')
       },
+      async updateInvoice () {
+        if (!this.invoiceDraft) {
+          if (this.invoiceItemList.length <= 0) {
+            this.emptyWarning = true
+            return;
+          }
+        }
+        this.loading = true;
+        this.calInvoiceTotal();
+        
+        const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
+        await database.update({
+          billerStreetAddress: this.billerStreetAddress,
+          billerCity: this.billerCity,
+          billerPostCode: this.billerPostCode,
+          billerCountry: this.billerCountry,
+          clientName: this.clientName,
+          clientEmail: this.clientEmail,
+          clientStreetAddress: this.clientStreetAddress,
+          clientCity: this.clientCity,
+          clientPostCode: this.clientPostCode,
+          clientCountry: this.clientCountry,
+          paymentTerms: this.paymentTerms,
+          paymentDueDate: this.paymentDueDate,
+          paymentDueDateUnix: this.paymentDueDateUnix,
+          productDescription: this.productDescription,
+          invoiceItemList: this.invoiceItemList,
+          invoiceTotal: this.invoiceTotal,       
+          invoiceDraft: false,
+          invoicePending: true,
+        });
+
+        
+        this.loading = false;
+
+        const data = {
+          docId: this.docId,
+          routeId: this.$route.params.invoiceId
+        };
+
+        this.$store.dispatch('updateInvoice', data)
+
+      },
       submitForm(){
         if (this.editInvoice) {
           this.updateInvoice();
@@ -347,9 +391,36 @@ export default {
         this.uploadInvoice();
       }
     },
-    created() {
-        this.invoiceDateUnix = Date.now()
-        this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('en-us', this.dateOptions)
+  created() {
+    // get current date for invoice date field
+      if (!this.editInvoice) {
+        this.invoiceDateUnix = Date.now();
+        this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions);
+      }
+      if (this.editInvoice) {
+        const currentInvoice = this.currentInvoiceArray[0];
+        this.docId = currentInvoice.docId;
+        this.billerStreetAddress = currentInvoice.billerStreetAddress;
+        this.billerCity = currentInvoice.billerCity;
+        this.billerPostCode = currentInvoice.billerPostCode;
+        this.billerCountry = currentInvoice.billerCountry;
+        this.clientName = currentInvoice.clientName;
+        this.clientEmail = currentInvoice.clientEmail;
+        this.clientStreetAddress = currentInvoice.clientStreetAddress;
+        this.clientCity = currentInvoice.clientCity;
+        this.clientPostCode = currentInvoice.clientPostCode;
+        this.clientCountry = currentInvoice.clientCountry;
+        this.invoiceDateUnix = currentInvoice.invoiceDateUnix;
+        this.invoiceDate = currentInvoice.invoiceDate;
+        this.paymentTerms = currentInvoice.paymentTerms;
+        this.paymentDueDateUnix = currentInvoice.paymentDueDateUnix;
+        this.paymentDueDate = currentInvoice.paymentDueDate;
+        this.productDescription = currentInvoice.productDescription;
+        this.invoicePending = currentInvoice.invoicePending;
+        this.invoiceDraft = currentInvoice.invoiceDraft;
+        this.invoiceItemList = currentInvoice.invoiceItemList;
+        this.invoiceTotal = currentInvoice.invoiceTotal;
+      }
     },
     watch: {
       paymentTerms () {

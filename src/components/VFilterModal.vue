@@ -35,7 +35,7 @@ export default {}
   transform: translateY(100%) translateX(-15%);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 1rem 2rem rgba(0,0,0, .1);
+  box-shadow: 0 2px 4px 0 rgba(0,0,0, .2);
 
   div {
     display: flex;
