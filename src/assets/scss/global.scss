@@ -62,4 +62,9 @@ margin: 0 auto;
       flex-basis: 48%;
     }
   }
+
+  router-link {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
   

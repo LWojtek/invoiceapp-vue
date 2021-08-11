@@ -1,18 +1,18 @@
 <template>
   <div class="invoices__header--right">
     <div class="invoices__header--filter" @click="modal = !modal">
-      <div class="text__wrapper">
-        Filter by status
+      <div class="text__wrapper" style="text-align: center;">
+        Filter by status <span v-if="this.val">{{ this.val }}</span>
       </div>
       <div class="icon__wrapper">
         <i class="fas fa-chevron-down" :class="{ active : modal }" />
       </div>
     </div>
-    <div class="invoices__header--btn">
+    <div class="invoices__header--btn" @click="newInvoice">
       <div class="icon__wrapper">
         <i class="fas fa-2x fa-plus-circle" />
       </div>
-      <div class="text__wrapper" @click="newInvoice">
+      <div class="text__wrapper">
         New Invoice
       </div>
     </div>
@@ -32,7 +32,9 @@ export default {
   },
   data () {
     return {
-      modal: false
+      modal: false,
+      val: null,
+
     }
   },
   methods: {
@@ -40,10 +42,30 @@ export default {
       this.$store.commit('toggleInvoice')
     }
   },
+  created(){
+    this.bus.$on('filteredInvoice', (value) => {
+      if (value === 'Clear Filter') {
+        this.filteredInvoice = null;
+        this.modal = false
+        this.val = null
+        return
+      }
+      this.val = value
+      this.modal = false
+    })
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+
+@import '@/assets/scss/variables.scss';
+
+.text__wrapper {
+  span {
+    color: $primary-violet-dark;
+  }
+}
 
 
 .modal-enter,

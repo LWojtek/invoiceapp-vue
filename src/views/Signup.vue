@@ -1,8 +1,38 @@
 <template>
-    <div class="login__wrapper">
-        <div class="login__form">
-            <h1>Login</h1>
+    <div class="signup__wrapper">
+        <div class="signup__form">
+            <h1>Register account</h1>
             <form>
+                <div class="name">
+                     <input 
+                        type="text" 
+                        id="firstname" 
+                        v-model="firstname" 
+                        :class="{ active : firstname }" 
+                        required
+                    >
+                    <label 
+                        for="firstname" 
+                        :class="{ active : firstname }" 
+                    >
+                        First Name
+                    </label>
+                </div>
+                <div class="lastname">
+                    <input 
+                        type="text" 
+                        id="lastname" 
+                        v-model="lastname" 
+                        :class="{ active : lastname }" 
+                        required
+                    >
+                    <label 
+                        for="username" 
+                        :class="{ active : lastname }" 
+                    >
+                        Last Name
+                    </label>
+                </div>
                 <div class="login">
                     <input 
                         type="text" 
@@ -33,17 +63,32 @@
                         Password
                     </label>
                 </div>
+                <div class="password">
+                    <input 
+                        type="confirmpassword" 
+                        id="confirmpassword" 
+                        v-model="confirmpassword" 
+                        required 
+                        :class="{ active : confirmpassword }"
+                    >
+                    <label 
+                        for="password" 
+                        :class="{ active : confirmpassword }"
+                    >
+                        Confirm Password
+                    </label>
+                </div>
                 <div class="btn--wrapper">
                     <button class="btn--submit">
-                        Login
+                        Sign Up
                     </button>
                 </div>
             </form>
             <p>
-                Not a member? 
-                <router-link to="/signup">
+                Already member?
+                <router-link to="/">
                     <span>
-                        Signup
+                        Login
                     </span>
                 </router-link>
             </p>
@@ -57,6 +102,9 @@
             return {
                 username: '',
                 password: '',
+                confirmpassword: '',
+                firstname: '',
+                lastname: ''
             }
         }
     }
@@ -66,7 +114,7 @@
 
 @import '@/assets/scss/variables.scss';
 
-.login__wrapper {
+.signup__wrapper {
     width: 100vw;
     height: 100vh;
     
@@ -74,25 +122,27 @@
     justify-content: center;
     align-items: center;
 
+    
     @media screen and (max-width: 999px) {
         padding-top: 14.3rem;
         overflow: hidden;
     }
 
 
-    .login__form {
+    .signup__form {
         width: 40rem;
         background: #fff;
         box-shadow: 0 4px 8px 0 rgba(0,0,0, 0.1);
         border-radius: 1rem;
-        
+
         @media screen and (max-width: 467px) {
             width: 100%;
             height: 100vh;
             padding-top: 2rem;
+         
         }
 
-
+        
         h1 {
             color: $primary-violet-dark;
             text-align: center;
@@ -124,6 +174,8 @@
     padding: 0 4rem;
 }
 
+.name,
+.lastname,
 .login,
 .password {
     margin-bottom: 3.5rem; 
@@ -136,7 +188,7 @@
         left: 4rem;
         font-size: 1.4rem;
         transform: translateY(-2rem);
-        transition: transform ease 250ms;
+        transition: all ease 250ms;
         pointer-events: none;
         color: rgb(179, 179, 179);
 
@@ -155,7 +207,7 @@
         transition: 200ms border ease;
 
         &.active {
-            border-bottom: 2px solid $primary-violet-dark;
+            border-bottom: 2px solid #9175ff8a;
         }
     }
 
@@ -165,7 +217,7 @@
     }
 
     input:focus {
-        border-bottom: 2px solid $primary-violet-dark;
+        border-bottom: 2px solid #9175ff8a;
     }
 }
 

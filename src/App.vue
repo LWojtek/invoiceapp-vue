@@ -8,7 +8,9 @@
       <transition name="modal">
         <VModal v-if="discardModal" />
       </transition>
-    <router-view/>
+    <transition name="page">
+      <router-view/>
+    </transition>
     </div>
   </div>
 </template>
@@ -42,6 +44,19 @@ export default {
 @import '@/assets/scss/global.scss';
 @import '@/assets/scss/variables.scss';
 
+#app {
+  overflow-x: hidden;
+  width: 100vw;
+  max-height: 100vh;
+}
+
+
+a {
+    text-decoration: none !important;
+    color: inherit !important;
+    outline: none !important;
+}
+  
 
 .invoice-enter-active,
 .invoice-leave-active {
@@ -58,6 +73,15 @@ export default {
 }
 .modal-enter,
 .modal-leave-to {
+  opacity: 0;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 500ms ease ;
+}
+.page-enter,
+.page-leave {
   opacity: 0;
 }
 

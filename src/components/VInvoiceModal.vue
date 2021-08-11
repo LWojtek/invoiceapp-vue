@@ -3,7 +3,7 @@
     <VLoading v-if="this.loading" />
     <VEmptyWarning v-if="this.emptyWarning" />
     <h2 v-if="!this.editInvoice">New Invoice</h2>
-    <h2 else>Edit Invoice</h2>
+    <h2 v-if="this.editInvoice">Edit Invoice</h2>
     <form @submit.prevent="submitForm">
       <fieldset>
         <!-- Bill From -->
@@ -205,14 +205,23 @@
       </fieldset>
       <transition name="fade">
         <div class="invoice__action">
-          <button  type="button" class="btn btn--discard" @click="closeInvoice">
+          <button v-if="!this.editInvoice" type="button" class="btn btn--discard" @click="closeInvoice">
             Discard
           </button>
-          <button class="btn btn--draft" @click.prevent="saveDraft">
+          <button v-if="!this.editInvoice" class="btn btn--draft" @click.prevent="saveDraft">
             Save as Draft
           </button>
-          <button type="submit" class="btn btn--save" @click="publishInvoice">
+          <button  v-if="!this.editInvoice"  type="submit" class="btn btn--save" @click="publishInvoice">
             Save & Send
+          </button>
+
+          <!-- edit button --> 
+
+          <button v-if="this.editInvoice" class="btn btn--draft" @click="closeInvoice">
+            Cancel
+          </button>
+          <button  v-if="this.editInvoice"  type="submit" class="btn btn--save" @click="publishInvoice">
+            Save Changes
           </button>
         </div>
       </transition>
@@ -290,11 +299,17 @@ export default {
         }
       },
       publishInvoice() {
-        this.invoicePending = true;
+        if (this.invoiceItemList.length >= 1) {
+          this.invoicePending = true;
+        }
       },
       saveDraft() {
-        this.invoiceDraft = true;
-        this.submitForm();
+        if (!this.editInvoice) {
+          this.invoiceDraft = true;
+          this.submitForm();
+        } else {
+          this.submitForm();
+        }
       },
       calInvoiceTotal() {
         this.invoiceTotal = 0;
@@ -341,37 +356,59 @@ export default {
         this.$store.dispatch('getInvoices')
       },
       async updateInvoice () {
-        if (!this.invoiceDraft) {
+        if (this.invoiceDraft) {
           if (this.invoiceItemList.length <= 0) {
             this.emptyWarning = true
             return;
           }
-        }
+        } 
         this.loading = true;
         this.calInvoiceTotal();
-        
-        const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
-        await database.update({
-          billerStreetAddress: this.billerStreetAddress,
-          billerCity: this.billerCity,
-          billerPostCode: this.billerPostCode,
-          billerCountry: this.billerCountry,
-          clientName: this.clientName,
-          clientEmail: this.clientEmail,
-          clientStreetAddress: this.clientStreetAddress,
-          clientCity: this.clientCity,
-          clientPostCode: this.clientPostCode,
-          clientCountry: this.clientCountry,
-          paymentTerms: this.paymentTerms,
-          paymentDueDate: this.paymentDueDate,
-          paymentDueDateUnix: this.paymentDueDateUnix,
-          productDescription: this.productDescription,
-          invoiceItemList: this.invoiceItemList,
-          invoiceTotal: this.invoiceTotal,       
-          invoiceDraft: false,
-          invoicePending: true,
-        });
 
+        if (this.invoiceDraft) {
+          const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
+          await database.update({
+            billerStreetAddress: this.billerStreetAddress,
+            billerCity: this.billerCity,
+            billerPostCode: this.billerPostCode,
+            billerCountry: this.billerCountry,
+            clientName: this.clientName,
+            clientEmail: this.clientEmail,
+            clientStreetAddress: this.clientStreetAddress,
+            clientCity: this.clientCity,
+            clientPostCode: this.clientPostCode,
+            clientCountry: this.clientCountry,
+            paymentTerms: this.paymentTerms,
+            paymentDueDate: this.paymentDueDate,
+            paymentDueDateUnix: this.paymentDueDateUnix,
+            productDescription: this.productDescription,
+            invoiceItemList: this.invoiceItemList,
+            invoiceTotal: this.invoiceTotal,
+            invoicePending: true,
+            invoiceDraft: false,
+          });          
+        } else {
+          const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
+          await database.update({
+            billerStreetAddress: this.billerStreetAddress,
+            billerCity: this.billerCity,
+            billerPostCode: this.billerPostCode,
+            billerCountry: this.billerCountry,
+            clientName: this.clientName,
+            clientEmail: this.clientEmail,
+            clientStreetAddress: this.clientStreetAddress,
+            clientCity: this.clientCity,
+            clientPostCode: this.clientPostCode,
+            clientCountry: this.clientCountry,
+            paymentTerms: this.paymentTerms,
+            paymentDueDate: this.paymentDueDate,
+            paymentDueDateUnix: this.paymentDueDateUnix,
+            productDescription: this.productDescription,
+            invoiceItemList: this.invoiceItemList,
+            invoiceTotal: this.invoiceTotal
+        })
+        
+      }
         
         this.loading = false;
 

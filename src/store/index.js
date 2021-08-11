@@ -7,13 +7,28 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     invoiceData: [],
+    filteredData: [],
     currentInvoiceArray: null,
     invoiceModal: null,
     discardModal: null,
     editInvoice: null,
     invoicesLoaded: null,
+    isAuth: false
   },
   mutations: {
+    filterInvoices ( state, payload ) {
+      state.filteredData = state.invoiceData.filter((invoice) => {
+        if (payload === 'Draft') {
+          return invoice.invoiceDraft
+        } else if ( payload === 'Paid' ) {
+          return invoice.invoicePaid
+        } else if ( payload === 'Pending' ) {
+          return invoice.invoicePending
+        } else {
+          return invoice
+        }
+      })
+    },
     toggleInvoice ( state ) {
       state.invoiceModal = !state.invoiceModal;
     },
@@ -55,7 +70,7 @@ export default new Vuex.Store({
       state.invoiceData = state.invoiceData.filter((invoice) => {
         return invoice.docId !== payload
       })
-    }
+    },
   },
   actions: {
     async getInvoices({ commit, state }) {

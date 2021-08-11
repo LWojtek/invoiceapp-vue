@@ -1,5 +1,5 @@
 <template>
-  <router-link v-if="invoiceData.length>=1" style="text-decoration: none; color: inherit;" :to="`/invoice/${invoice.invoiceId}`">
+  <router-link v-if="invoiceData.length>=1" :to="`/invoices/${invoice.invoiceId}`">
     <li class="invoice"
     >
         <div class="invoice__id">
