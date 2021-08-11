@@ -34,9 +34,11 @@
                     </label>
                 </div>
                 <div class="btn--wrapper">
-                    <button class="btn--submit">
-                        Login
-                    </button>
+                    <router-link to="/invoices">
+                        <button class="btn--submit">
+                            Login
+                        </button>
+                    </router-link>
                 </div>
             </form>
             <p>
