@@ -24,7 +24,7 @@ const routes = [
     component: Signup
   },
   {
-    path: '/invoice/:invoiceId',
+    path: '/invoices/:invoiceId',
     name: 'Invoice',
     component: Invoice
   }
