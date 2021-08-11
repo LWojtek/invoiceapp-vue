@@ -2,18 +2,18 @@
     <div class="signup__wrapper">
         <div class="signup__form">
             <h1>Register account</h1>
-            <form>
+            <form @submit.prevent="signUp">
                 <div class="name">
                      <input 
                         type="text" 
                         id="firstname" 
-                        v-model="firstname" 
-                        :class="{ active : firstname }" 
+                        v-model="form.firstName" 
+                        :class="{ active : form.firstName }" 
                         required
                     >
                     <label 
                         for="firstname" 
-                        :class="{ active : firstname }" 
+                        :class="{ active : form.firstName }" 
                     >
                         First Name
                     </label>
@@ -22,58 +22,58 @@
                     <input 
                         type="text" 
                         id="lastname" 
-                        v-model="lastname" 
-                        :class="{ active : lastname }" 
+                        v-model="form.lastName" 
+                        :class="{ active : form.lastName }" 
                         required
                     >
                     <label 
-                        for="username" 
-                        :class="{ active : lastname }" 
+                        for="lastname" 
+                        :class="{ active : form.lastName }" 
                     >
                         Last Name
                     </label>
                 </div>
                 <div class="login">
                     <input 
-                        type="text" 
-                        id="username" 
-                        v-model="username" 
-                        :class="{ active : username }" 
+                        type="email" 
+                        id="email" 
+                        v-model="form.email" 
+                        :class="{ active : form.email }" 
                         required
                     >
                     <label 
-                        for="username" 
-                        :class="{ active : username }" 
+                        for="email" 
+                        :class="{ active : form.email }" 
                     >
-                        Username
+                        Email address
                     </label>
                 </div>
                 <div class="password">
                     <input 
                         type="password" 
                         id="password" 
-                        v-model="password" 
+                        v-model="form.password" 
                         required 
-                        :class="{ active : password }"
+                        :class="{ active : form.password }"
                     >
                     <label 
                         for="password" 
-                        :class="{ active : password }"
+                        :class="{ active : form.password }"
                     >
                         Password
                     </label>
                 </div>
                 <div class="password">
                     <input 
-                        type="confirmpassword" 
+                        type="password" 
                         id="confirmpassword" 
-                        v-model="confirmpassword" 
+                        v-model="form.confirmpassword" 
                         required 
-                        :class="{ active : confirmpassword }"
+                        :class="{ active : form.confirmpassword }"
                     >
                     <label 
-                        for="password" 
-                        :class="{ active : confirmpassword }"
+                        for="confirmpassword" 
+                        :class="{ active : form.confirmpassword }"
                     >
                         Confirm Password
                     </label>
@@ -97,14 +97,50 @@
 </template>
 
 <script>
+import firebaseApp from '@/firebase/firebaseInit'
+
     export default {
         data(){
             return {
-                username: '',
-                password: '',
-                confirmpassword: '',
-                firstname: '',
-                lastname: ''
+                form: {
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    confirmpassword: '',
+                }
+            }
+        },
+        methods: {
+            signUp(){
+                if (this.form.password === this.form.confirmpassword){
+                    this.submit()
+                } else {
+                    console.log('Passwords dont match')
+                }
+            },
+            submit(){
+                firebaseApp
+                .auth()
+                .createUserWithEmailAndPassword(this.form.email, this.form.password)
+                .then(data => {
+                
+                data.user
+                    .updateProfile({
+                        firstName: this.form.firstName,
+                        lastName: this.form.lastName,
+                        email: this.form.email,
+                        password: this.form.password
+                    })
+                    .then(() => {
+                        data.user
+                        this.$store.commit('setAuth', true)
+                        this.$router.push({ path: '/invoices'})
+                    });
+                })
+                .catch(err => {
+                this.error = err.message;
+                });
             }
         }
     }

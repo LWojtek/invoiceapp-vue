@@ -2,40 +2,40 @@
     <div class="login__wrapper">
         <div class="login__form">
             <h1>Login</h1>
-            <form>
+            <form @submit.prevent="login">
                 <div class="login">
                     <input 
-                        type="text" 
-                        id="username" 
-                        v-model="username" 
-                        :class="{ active : username }" 
+                        type="email" 
+                        id="email" 
+                        v-model="form.email" 
+                        :class="{ active : form.email }" 
                         required
                     >
                     <label 
-                        for="username" 
-                        :class="{ active : username }" 
+                        for="email" 
+                        :class="{ active : form.email }" 
                     >
-                        Username
+                        Email Address
                     </label>
                 </div>
                 <div class="password">
                     <input 
                         type="password" 
                         id="password" 
-                        v-model="password" 
+                        v-model="form.password" 
                         required 
-                        :class="{ active : password }"
+                        :class="{ active : form.password }"
                     >
                     <label 
                         for="password" 
-                        :class="{ active : password }"
+                        :class="{ active : form.password }"
                     >
                         Password
                     </label>
                 </div>
                 <div class="btn--wrapper">
                     <!-- <router-link to="/invoices"> --> 
-                        <button class="btn--submit" @click.prevent="login">
+                        <button class="btn--submit">
                             Login
                         </button>
                     <!-- </router-link> -->
@@ -54,23 +54,30 @@
 </template>
 
 <script>
+import firebaseApp from '@/firebase/firebaseInit'
+
     export default {
         data(){
-            return {         
-                username: '',
-                password: '',            
+            return {       
+                form: {
+                    email: '',
+                    password: '',            
+                }  
             }
         },
         methods: {
             login(){
-                if (this.username === 'admin' && this.password === 'pass') {
+                firebaseApp
+                .auth()
+                .signInWithEmailAndPassword(this.form.email, this.form.password)
+                .then(() => {
                     this.$store.commit('setAuth', true)
-                    this.$router.replace({ name: 'Invoices' })
-                } else {
-                    console.log('Username incorrect or password')
-                }
-
-            }
+                    this.$router.replace({ path: "/invoices" });
+                })
+                .catch(err => {
+                    this.error = err.message;
+                });
+            },   
         }
     }
 </script>

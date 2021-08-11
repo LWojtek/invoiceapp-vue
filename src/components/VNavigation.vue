@@ -7,7 +7,7 @@
       <div class="header__switch">
         <i class="fas fa-lg fa-moon" />
       </div>
-      <div class="header__logout">
+      <div class="header__logout" @click="logOut">
         <i class="fas fa-lg fa-power-off" />
       </div>
     </div>
@@ -16,7 +16,12 @@
 
 <script>
     export default {
-        
+        methods: {
+          logOut(){
+            this.$store.commit('setAuth', false)
+            this.$router.push({ path: '/'})
+          }
+        }
     }
 </script>
 
