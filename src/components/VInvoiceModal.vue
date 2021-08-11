@@ -243,7 +243,7 @@ export default {
         VEmptyWarning
     },
     computed: {
-      ...mapState(['editInvoice', 'discardModal', 'invoiceModal', 'currentInvoiceArray'])
+      ...mapState(['editInvoice', 'discardModal', 'invoiceModal', 'currentInvoiceArray', 'isAuth'])
     },
     data(){
         return {
@@ -327,7 +327,7 @@ export default {
         }
         this.loading = true;
         this.calInvoiceTotal();
-        const dataBase = firebaseApp.firestore().collection("invoices").doc();
+        const dataBase = firebaseApp.firestore().collection('users').doc(`'${this.currentUserID}'`).collection('invoices').doc()
         await dataBase.set({
           invoiceId: `${uuidv4().slice(1, 6).toUpperCase()}`,
           billerStreetAddress: this.billerStreetAddress,
@@ -367,7 +367,7 @@ export default {
         this.calInvoiceTotal();
 
         if (this.invoiceDraft) {
-          const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
+          const database = firebaseApp.firestore().collection('users').doc(`'${this.currentUserID}'`).collection('invoices').doc(this.docId);
           await database.update({
             billerStreetAddress: this.billerStreetAddress,
             billerCity: this.billerCity,
@@ -389,7 +389,7 @@ export default {
             invoiceDraft: false,
           });          
         } else {
-          const database = firebaseApp.firestore().collection('invoices').doc(this.docId);
+          const database = firebaseApp.firestore().collection('users').doc(`'${this.currentUserID}'`).collection('invoices').doc(this.docId);
           await database.update({
             billerStreetAddress: this.billerStreetAddress,
             billerCity: this.billerCity,
@@ -431,7 +431,9 @@ export default {
     },
   created() {
     // get current date for invoice date field
-      this.currentUserID = this.$store.state.currentUser.uid
+       if(this.$store.state.isAuth) {
+        this.currentUserID = this.$store.state.currentUser.uid
+      }     
       if (!this.editInvoice) {
         this.invoiceDateUnix = Date.now();
         this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions);

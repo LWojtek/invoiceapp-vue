@@ -4,11 +4,12 @@ import 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyClu_0RpNhy3doHIf_9BL_ROKR4U1dyotc',
-  // authDomain: 'invoice-app-538ad.firebaseapp.com',
-  projectId: 'invoice-app-538ad'
-  // storageBucket: 'invoice-app-538ad.appspot.com',
-  // messagingSenderId: '725517910214',
-  // appId: '1:725517910214:web:8bab33a0354c50e4f4d7c7'
+  authDomain: 'invoice-app-538ad.firebaseapp.com',
+  projectId: 'invoice-app-538ad',
+  storageBucket: 'invoice-app-538ad.appspot.com',
+  messagingSenderId: '725517910214',
+  appId: '1:725517910214:web:8bab33a0354c50e4f4d7c7',
+  databaseURL: 'https://invoice-app-538ad-default-rtdb.europe-west1.firebasedatabase.app/'
 }
 
 var firebaseApp = {}

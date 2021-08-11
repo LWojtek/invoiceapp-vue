@@ -4,7 +4,7 @@ import Invoices from '../views/Invoices.vue'
 import Invoice from '../views/Invoice.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
-import store from '../store'
+// import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -17,14 +17,7 @@ const routes = [
   {
     path: '/invoices',
     name: 'Invoices',
-    component: Invoices,
-    beforeEnter: (to, from, next) => {
-      if (!store.state.isAuth) {
-        next('/')
-      } else {
-        next()
-      }
-    }
+    component: Invoices
   },
   {
     path: '/signup',
@@ -43,7 +36,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 })
-
-
 
 export default router

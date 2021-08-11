@@ -33,7 +33,7 @@ export default {
       'discardModal'
     ])
   },
-  created(){
+  mounted(){
     this.$store.dispatch('getInvoices')
   }
 }

@@ -198,7 +198,7 @@ export default {
     },
     async deleteInvoice(docId) {
         await this.$store.dispatch('deleteInvoice', docId)
-        this.$router.push({ name: 'Home' })
+        this.$router.push({ path: '/invoices' })
     },
     toggleEditInvoice(){
         this.$store.commit('toggleEditInvoice')

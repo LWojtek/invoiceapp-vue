@@ -20,6 +20,7 @@
           logOut(){
             this.$store.commit('setAuth', false)
             this.$router.push({ path: '/'})
+            this.$store.commit('setUser', [])
           }
         }
     }

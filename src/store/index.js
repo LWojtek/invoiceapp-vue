@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebaseApp from '../firebase/firebaseInit';
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     },
     setInvoiceData ( state, payload ) {
       state.invoiceData.push(payload)
+
     },
     invoicesLoaded ( state ) {
       state.invoicesLoaded = true
@@ -78,10 +80,10 @@ export default new Vuex.Store({
         return invoice.docId !== payload
       })
     },
-  },
+  }, 
   actions: {
     async getInvoices({ commit, state }) {
-      const getData = firebaseApp.firestore().collection("invoices");
+      const getData = firebaseApp.firestore().collection ('users').doc(`'${state.currentUser.uid}'`).collection('invoices');
       const results = await getData.get();
       results.forEach((doc) => {
         if (!state.invoiceData.some((invoice) => invoice.docId === doc.id)) {
@@ -109,22 +111,23 @@ export default new Vuex.Store({
             invoicePending: doc.data().invoicePending,
             invoiceDraft: doc.data().invoiceDraft,
             invoicePaid: doc.data().invoicePaid,
-          };
+          }; 
           commit("setInvoiceData", data);
+
         }
       });
       commit("invoicesLoaded");
     },
-    async updateStatusToPaid({ commit }, docId) {
-      const getInvoice = firebaseApp.firestore().collection('invoices').doc(docId);
+    async updateStatusToPaid({ commit, state }, docId) {
+      const getInvoice = firebaseApp.firestore().collection('users').doc(`'${state.currentUser.uid}'`).collection('invoices').doc(docId);
       await getInvoice.update({
         invoicePaid: true,
         invoicePending: false
       });
       commit('updateStatusToPaid', docId)
     },
-    async updateStatusToPending({ commit }, docId) {
-      const getInvoice = firebaseApp.firestore().collection('invoices').doc(docId);
+    async updateStatusToPending({ commit, state }, docId) {
+      const getInvoice = firebaseApp.firestore().collection('users').doc(`'${state.currentUser.uid}'`).collection('invoices').doc(docId);
       await getInvoice.update({
         invoicePaid: false,
         invoicePending: true,
@@ -132,8 +135,8 @@ export default new Vuex.Store({
       })
       commit('updateStatusToPending', docId)
     },
-    async deleteInvoice({ commit }, docId) {
-      const getInvoice = firebaseApp.firestore().collection('invoices').doc(docId);
+    async deleteInvoice({ commit, state }, docId) {
+      const getInvoice = firebaseApp.firestore().collection('users').doc(`'${state.currentUser.uid}'`).collection('invoices').doc(docId);
       await getInvoice.delete();
       commit('deleteInvoice', docId)
     },
@@ -146,5 +149,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
-  }
+  },
+  plugins: [createPersistedState()]
 })

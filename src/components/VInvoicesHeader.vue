@@ -1,7 +1,7 @@
 <template>
   <div class="invoices__header">
     <div class="invoices__header--left">
-      <h1>Invoices</h1>
+      <h1>Hi {{this.user}} Invoices</h1>
       <!-- <span>Showing {{ invoices.length }} invoices</span> -->
     </div>
     <VFilters />
@@ -14,6 +14,11 @@ import VFilters from '@/components/VFilters.vue'
 export default {
     components: {
         VFilters
+    },
+    computed: {
+      user() {
+        return this.$store.state.currentUser.displayName
+      }
     }
 }
 </script>
