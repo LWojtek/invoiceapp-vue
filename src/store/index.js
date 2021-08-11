@@ -16,6 +16,9 @@ export default new Vuex.Store({
     isAuth: false
   },
   mutations: {
+    setAuth( state, payload ) {
+      state.isAuth = payload
+    },
     filterInvoices ( state, payload ) {
       state.filteredData = state.invoiceData.filter((invoice) => {
         if (payload === 'Draft') {

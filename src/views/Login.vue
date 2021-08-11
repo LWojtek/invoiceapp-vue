@@ -34,11 +34,11 @@
                     </label>
                 </div>
                 <div class="btn--wrapper">
-                    <router-link to="/invoices">
-                        <button class="btn--submit">
+                    <!-- <router-link to="/invoices"> --> 
+                        <button class="btn--submit" @click.prevent="login">
                             Login
                         </button>
-                    </router-link>
+                    <!-- </router-link> -->
                 </div>
             </form>
             <p>
@@ -56,9 +56,20 @@
 <script>
     export default {
         data(){
-            return {
+            return {         
                 username: '',
-                password: '',
+                password: '',            
+            }
+        },
+        methods: {
+            login(){
+                if (this.username === 'admin' && this.password === 'pass') {
+                    this.$store.commit('setAuth', true)
+                    this.$router.replace({ name: 'Invoices' })
+                } else {
+                    console.log('Username incorrect or password')
+                }
+
             }
         }
     }
