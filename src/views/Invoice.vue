@@ -2,7 +2,7 @@
   <div v-if="currentInvoice" class="container">
     <div class="invoice__wrapper">
       <div class="invoice">
-        <router-link style="text-decoration: none; color: inherit;" to="/">
+        <router-link to="/invoices">
           <div class="btn--back">
             <i class="fas fa-lg fa-long-arrow-alt-left" />
             Go back
