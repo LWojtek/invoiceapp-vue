@@ -127,15 +127,16 @@ import firebaseApp from '@/firebase/firebaseInit'
                 
                 data.user
                     .updateProfile({
-                        firstName: this.form.firstName,
-                        lastName: this.form.lastName,
-                        email: this.form.email,
-                        password: this.form.password
-                    })
-                    .then(() => {
-                        data.user
+                        displayName: this.form.firstName
+                        })
+                    .then(() => {      
                         this.$store.commit('setAuth', true)
                         this.$router.push({ path: '/invoices'})
+                        this.$store.commit('setUser', {
+                            displayName: data.user.displayName,
+                            uid: data.user.uid
+                        })             
+                        
                     });
                 })
                 .catch(err => {

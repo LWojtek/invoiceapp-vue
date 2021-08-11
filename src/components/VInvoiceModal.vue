@@ -247,6 +247,7 @@ export default {
     },
     data(){
         return {
+            currentUserID: null,
             loading: null,
             emptyWarning: false,
             invoiceId: null,
@@ -430,6 +431,7 @@ export default {
     },
   created() {
     // get current date for invoice date field
+      this.currentUserID = this.$store.state.currentUser.uid
       if (!this.editInvoice) {
         this.invoiceDateUnix = Date.now();
         this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions);

@@ -70,9 +70,13 @@ import firebaseApp from '@/firebase/firebaseInit'
                 firebaseApp
                 .auth()
                 .signInWithEmailAndPassword(this.form.email, this.form.password)
-                .then(() => {
+                .then((data) => {
                     this.$store.commit('setAuth', true)
                     this.$router.replace({ path: "/invoices" });
+                    this.$store.commit('setUser', {
+                        displayName: data.user.displayName,
+                        uid: data.user.uid
+                    })     
                 })
                 .catch(err => {
                     this.error = err.message;

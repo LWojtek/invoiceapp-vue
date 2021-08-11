@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    currentUser: null,
     invoiceData: [],
     filteredData: [],
     currentInvoiceArray: null,
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     isAuth: false
   },
   mutations: {
+    setUser ( state, payload ) {
+      state.currentUser = payload
+    },
     setAuth( state, payload ) {
       state.isAuth = payload
     },
