@@ -17,7 +17,7 @@
       </div>
     </div>
     <transition name="modal">
-      <VFilterModal v-if="modal" />
+      <VFilterModal v-if="modal" @selected="selectedFilter"/>
     </transition>
   </div>
 </template>
@@ -40,19 +40,34 @@ export default {
   methods: {
     newInvoice(){
       this.$store.commit('toggleInvoice')
+    },
+
+    selectedFilter(filter){
+      this.val = filter;
+      this.modal = false;
+      // I moved the store filter logic outside the filter modal
+      // Filter modal should only be used to return the selected filter values
+      // Than it is more universal, it can be used in different part of application
+      // When you stuck the store logic connected to invoices you are limiting it to just invoices
+      // but it can be used across the app
+      this.$store.commit('updateFilter', filter);
     }
+
   },
   created(){
-    this.bus.$on('filteredInvoice', (value) => {
-      if (value === 'Clear Filter') {
-        this.filteredInvoice = null;
-        this.modal = false
-        this.val = null
-        return
-      }
-      this.val = value
-      this.modal = false
-    })
+    // The bus in not needed here
+    // this is a parent child conversation ;)
+
+    // this.bus.$on('filteredInvoice', (value) => {
+    //   if (value === 'Clear Filter') {
+    //     this.filteredInvoice = null;
+    //     this.modal = false
+    //     this.val = null
+    //     return
+    //   }
+    //   this.val = value
+    //   this.modal = false
+    // })
   }
 }
 </script>

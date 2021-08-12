@@ -36,7 +36,10 @@ export default {
     VInvoiceListItem
   },
   computed: {
-    ...mapState(['invoiceData', 'filteredData', 'invoicesLoaded'])
+    ...mapState(['invoiceData', 'invoicesLoaded']),
+    filteredData(){
+      return this.$store.getters.filterInvoices;
+    }
   },
   methods: {
     newInvoice(){
@@ -44,7 +47,10 @@ export default {
     }
   },
   created(){
-    this.$store.state.filteredData = this.$store.state.invoiceData
+    if (this.$store.state.isAuth) {
+      this.$store.dispatch('getInvoices')
+    }
+    // this.$store.state.filteredData = this.$store.state.invoiceData
   }
 }
 </script>

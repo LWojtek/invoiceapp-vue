@@ -41,6 +41,7 @@
                     <!-- </router-link> -->
                 </div>
             </form>
+            {{error}}
             <p>
                 Not a member? 
                 <router-link to="/signup">
@@ -61,8 +62,9 @@ import firebaseApp from '@/firebase/firebaseInit'
             return {       
                 form: {
                     email: '',
-                    password: '',            
-                }  
+                    password: ''
+                },
+                error: ''
             }
         },
         methods: {
@@ -76,7 +78,7 @@ import firebaseApp from '@/firebase/firebaseInit'
                     this.$store.commit('setUser', {
                         displayName: data.user.displayName,
                         uid: data.user.uid
-                    })     
+                    })
                 })
                 .catch(err => {
                     this.error = err.message;

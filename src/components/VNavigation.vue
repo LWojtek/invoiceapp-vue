@@ -10,17 +10,34 @@
       <div class="header__logout" @click="logOut">
         <i class="fas fa-lg fa-power-off" />
       </div>
+      <p v-if="error">{{error}}</p>
     </div>
   </nav>
 </template>
 
 <script>
+import firebaseApp from '@/firebase/firebaseInit'
     export default {
+        data() {
+          return {
+            error: null
+          }
+        },
         methods: {
           logOut(){
-            this.$store.commit('setAuth', false)
-            this.$router.push({ path: '/'})
-            this.$store.commit('setUser', [])
+            // Firebase should be signout and when succesfull the reset of the data is required
+            // invoces should be reset to an empty array
+            // perviously the store remembered the previous user invoice and it was showing it
+            
+            firebaseApp.auth().signOut().then(() => {
+              this.$store.commit('setAuth', false)
+              this.$store.commit('setUser', undefined)
+              this.$store.commit('setInvoiceData', [])
+              this.$router.push({ path: '/'})
+            }).catch((error) => {
+              this.error = error;
+              // An error happened.
+            });
           }
         }
     }

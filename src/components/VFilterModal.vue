@@ -1,67 +1,37 @@
 <template>
   <ul class="filter__modal">
-    <li @click="filterInvoices">Draft</li>
-    <li @click="filterInvoices">Pending</li>
-    <li @click="filterInvoices">Paid</li>
-    <li @click="filterInvoices">Clear Filter</li>
+    <!-- Try to seperate the function values from text -->
+    <!-- Previously you used element innerText to define the value of the filter -->
+    <!-- Keep it seperate as it is much safer, lets say in the future someone will ask you to change the text -->
+    <!-- You would have to change all the logic -->
+    <!-- Inner text should not define your logic values ;) -->
+    <li @click="updateFilter('Draft')">Draft</li>
+    <li @click="updateFilter('Pending')">Pending</li>
+    <li @click="updateFilter('Paid')">Paid</li>
+    <li @click="updateFilter()">Clear Filter</li>
   </ul>
-
-<!-- <div class="filter__modal">
-    <div>
-      <input id="paid" type="checkbox" v-model="isPaid" @change="filterInvoices">
-      <label for="paid">Paid</label>
-      <div class="checkbox" />
-    </div>
-    <div>
-      <input id="pending" type="checkbox" v-model="isPending" @change="filterInvoices">
-      <label for="pending">Pending</label>
-      <div class="checkbox" />
-    </div>
-    <div>
-      <input id="draft" type="checkbox" v-model="isDraft" @change="filterInvoices">
-      <label for="draft">Draft</label>
-      <div class="checkbox" />
-    </div>
-  </div> -->
 </template>
 
 <script>
-import { mapState } from 'vuex'
 
 export default {
   data(){
     return {
-      filterMenu: null,
-      filteredInvoice: null,
-    }
-  },
-  computed: {
-    ...mapState(['invoiceData']),
-    filteredInvoices(){
-      return this.invoiceData.filter((invoice) => {
-        if (this.filteredInvoice === 'Draft') {
-          return invoice.invoiceDraft
-        } else if (this.filteredInvoice === 'Paid') {
-          return invoice.invoicePaid
-        } else if (this.filteredInvoice === 'Pending') {
-          return invoice.invoicePending
-        } else {
-          return invoice
-        }
-      })
+      selectedFilter: null,
     }
   },
   methods: {
-    filterInvoices(e){
-      if (e.target.value === 'Clear Filter') {
-        this.filteredInvoice = null;
-        return
-      }
-      this.filteredInvoice = e.target.innerText;
-      this.bus.$emit('filteredInvoice', this.filteredInvoice)
-      this.$store.commit('filterInvoices', this.filteredInvoice)
+    updateFilter(filter){
+      this.selectedFilter = filter;
+    }
+  },
+
+  watch: {
+    selectedFilter(newData){
+      this.$emit('selected', newData);
     }
   }
+
 }
 
 

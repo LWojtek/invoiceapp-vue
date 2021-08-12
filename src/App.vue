@@ -34,7 +34,8 @@ export default {
     ])
   },
   mounted(){
-    this.$store.dispatch('getInvoices')
+    // Removed the getinvoices store dispatch
+    // The app should not call it, the invoice call should be only made when you are loged in and on the inovice page
   }
 }
 </script>

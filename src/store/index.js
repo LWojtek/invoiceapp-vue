@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentUser: null,
+    currentUser: undefined,
+    filter: undefined,
     invoiceData: [],
     filteredData: [],
     currentInvoiceArray: null,
@@ -17,25 +18,29 @@ export default new Vuex.Store({
     invoicesLoaded: null,
     isAuth: false
   },
+
+  getters: {
+    // use getters for any filter data
+    // mutations are for updates like delete, replace, update
+    // read aboud vuex getters please
+    filterInvoices(state) {
+      let filter = state.filter;
+      console.log(filter);
+      if (!filter) {
+        return state.invoiceData;
+      }
+      return state.invoiceData.filter((invoice) => {
+        return invoice['invoice' + filter];
+      });
+    }
+  },
+
   mutations: {
     setUser ( state, payload ) {
       state.currentUser = payload
     },
     setAuth( state, payload ) {
       state.isAuth = payload
-    },
-    filterInvoices ( state, payload ) {
-      state.filteredData = state.invoiceData.filter((invoice) => {
-        if (payload === 'Draft') {
-          return invoice.invoiceDraft
-        } else if ( payload === 'Paid' ) {
-          return invoice.invoicePaid
-        } else if ( payload === 'Pending' ) {
-          return invoice.invoicePending
-        } else {
-          return invoice
-        }
-      })
     },
     toggleInvoice ( state ) {
       state.invoiceModal = !state.invoiceModal;
@@ -47,8 +52,7 @@ export default new Vuex.Store({
       state.editInvoice = !state.editInvoice;
     },
     setInvoiceData ( state, payload ) {
-      state.invoiceData.push(payload)
-
+      state.invoiceData = payload;
     },
     invoicesLoaded ( state ) {
       state.invoicesLoaded = true
@@ -80,42 +84,16 @@ export default new Vuex.Store({
         return invoice.docId !== payload
       })
     },
+    updateFilter(state, filter) {
+      state.filter = filter;
+    }
   }, 
   actions: {
     async getInvoices({ commit, state }) {
       const getData = firebaseApp.firestore().collection ('users').doc(`'${state.currentUser.uid}'`).collection('invoices');
       const results = await getData.get();
-      results.forEach((doc) => {
-        if (!state.invoiceData.some((invoice) => invoice.docId === doc.id)) {
-          const data = {
-            docId: doc.id,
-            invoiceId: doc.data().invoiceId,
-            billerStreetAddress: doc.data().billerStreetAddress,
-            billerCity: doc.data().billerCity,
-            billerPostCode: doc.data().billerPostCode,
-            billerCountry: doc.data().billerCountry,
-            clientName: doc.data().clientName,
-            clientEmail: doc.data().clientEmail,
-            clientStreetAddress: doc.data().clientStreetAddress,
-            clientCity: doc.data().clientCity,
-            clientPostCode: doc.data().clientPostCode,
-            clientCountry: doc.data().clientCountry,
-            invoiceDateUnix: doc.data().invoiceDateUnix,
-            invoiceDate: doc.data().invoiceDate,
-            paymentTerms: doc.data().paymentTerms,
-            paymentDueDateUnix: doc.data().paymentDueDateUnix,
-            paymentDueDate: doc.data().paymentDueDate,
-            productDescription: doc.data().productDescription,
-            invoiceItemList: doc.data().invoiceItemList,
-            invoiceTotal: doc.data().invoiceTotal,
-            invoicePending: doc.data().invoicePending,
-            invoiceDraft: doc.data().invoiceDraft,
-            invoicePaid: doc.data().invoicePaid,
-          }; 
-          commit("setInvoiceData", data);
-
-        }
-      });
+      const dataArr = results.docs.map(doc => doc.data())
+      commit("setInvoiceData", dataArr);
       commit("invoicesLoaded");
     },
     async updateStatusToPaid({ commit, state }, docId) {
