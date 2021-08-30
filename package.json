@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "facebook-js-sdk": "^0.3.4",
     "firebase": "^8.9.0",
     "uuid": "^3.4.0",
     "vue": "^2.6.11",
+    "vue-facebook-chat": "^1.0.6",
     "vue-fb-customer-chat": "^0.2.0",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"

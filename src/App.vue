@@ -10,15 +10,17 @@
       </transition>
     <router-view/>
     </div>
+<!-- 
     <div
 			class="fb-customerchat"
 			page_id="100819355676998"
-			minimized="true"
-		></div>
+			minimized="false"
+		></div> -->
   </div>
 </template>
 
 <script>
+
 import VNavigation from '@/components/VNavigation.vue';
 import VInvoiceModal from '@/components/VInvoiceModal.vue';
 import VModal from '@/components/VModal.vue';
@@ -36,8 +38,9 @@ export default {
       'discardModal'
     ])
   },
+ 
   created(){
-    this.$store.dispatch('getInvoices')
+    this.$store.dispatch('getInvoices')   
   }
 }
 </script>
