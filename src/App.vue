@@ -10,6 +10,11 @@
       </transition>
     <router-view/>
     </div>
+    <div
+			class="fb-customerchat"
+			page_id="100819355676998"
+			minimized="true"
+		></div>
   </div>
 </template>
 
