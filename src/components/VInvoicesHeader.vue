@@ -1,7 +1,7 @@
 <template>
   <div class="invoices__header">
     <div class="invoices__header--left">
-      <h1>Hi {{this.user}} Invoices</h1>
+      <h1>Hi, {{this.user}}</h1>
       <!-- <span>Showing {{ invoices.length }} invoices</span> -->
     </div>
     <VFilters />
@@ -34,9 +34,10 @@ export default {
   }
 
   &--left {
-    flex-basis: 20%;
+    flex-basis: 40%;
 
     h1 {
+      width: 100%;
       font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
